@@ -1,6 +1,8 @@
+import 'package:budgetor/helpers/firebase_helper.dart';
 import 'package:budgetor/screens/home_screen.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
@@ -17,8 +19,11 @@ final isAppLoadingProvider = StateProvider<bool>((ref) {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   //nb_utils shared pref initialization
   await initialize();
+  //initialize firebase
+  await FirebaseHelper.initFirebase();
 
   runApp(
     const ProviderScope(
