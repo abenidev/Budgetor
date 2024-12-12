@@ -11,17 +11,9 @@ class FirebaseHelper {
   FirebaseHelper._();
 
   static Future<void> initFirebase() async {
-    //firebase
-    bool isFirebaseInited = SharedPrefsHelper.isFirebaseInited();
-    if (!isFirebaseInited) {
-      bool hasInternet = await InternetConnection().hasInternetAccess;
-      if (hasInternet) {
-        await _initialize();
-        await SharedPrefsHelper.setIsFirebaseInited(true);
-      }
-    } else {
-      await _initialize();
-    }
+    await InternetConnection().hasInternetAccess;
+    await _initialize();
+    await SharedPrefsHelper.setIsFirebaseInited(true);
   }
 
   static Future<void> _initialize() async {
