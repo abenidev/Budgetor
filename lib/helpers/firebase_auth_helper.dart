@@ -1,4 +1,6 @@
+import 'package:budgetor/helpers/objectbox_helper.dart';
 import 'package:budgetor/main.dart';
+import 'package:budgetor/models/user_model.dart';
 import 'package:budgetor/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +31,15 @@ class FirebaseAuthHelper {
         idToken: googleAuth?.idToken,
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
+
+      User? currentUser = FirebaseAuth.instance.currentUser;
+      Boxes.userBox.put(
+        UserModel(
+          name: currentUser?.displayName ?? '',
+          email: currentUser?.email ?? '',
+          profileImgUrl: currentUser?.photoURL ?? '',
+        ),
+      );
       return true;
     } catch (e) {
       return false;

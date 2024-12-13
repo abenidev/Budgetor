@@ -4,3 +4,7 @@ const String appPackageName = 'dev.abeni.budgetor';
 const String appName = 'Budgetor';
 const List<String> appFeedbackReciepients = [supportEmail];
 const String websiteAddress = 'https://abeni.dev/';
+
+//
+const String incomeType = 'Income';
+const String expenseType = 'Expense';

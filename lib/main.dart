@@ -1,4 +1,5 @@
 import 'package:budgetor/helpers/firebase_helper.dart';
+import 'package:budgetor/helpers/objectbox_helper.dart';
 import 'package:budgetor/helpers/workmanager_helper.dart';
 import 'package:budgetor/screens/home_screen.dart';
 import 'package:budgetor/screens/login_screen.dart';
@@ -16,6 +17,7 @@ import 'package:budgetor/helpers/local_notification_helper.dart';
 import 'package:workmanager/workmanager.dart';
 
 Logger logger = Logger();
+late ObjectBox objectbox;
 
 final isAppLoadingProvider = StateProvider<bool>((ref) {
   return false;
@@ -29,6 +31,8 @@ void callbackDispatcher() {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  //init objectbox
+  objectbox = await ObjectBox.create();
   //workmanager
   Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   //nb_utils shared pref initialization
