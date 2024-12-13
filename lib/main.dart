@@ -1,6 +1,4 @@
-import 'package:budgetor/helpers/firebase_auth_helper.dart';
 import 'package:budgetor/helpers/firebase_helper.dart';
-import 'package:budgetor/helpers/shared_prefs_helper.dart';
 import 'package:budgetor/screens/home_screen.dart';
 import 'package:budgetor/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -95,9 +93,6 @@ class _RootState extends ConsumerState<Root> with TickerProviderStateMixin {
     //localNotif
     await LocalNotificationHelper.requestPermission();
     await LocalNotificationHelper.initializeNotif();
-
-    bool isFirebaseInited = SharedPrefsHelper.isFirebaseInited();
-    if (isFirebaseInited) FirebaseAuthHelper.initListener();
 
     if (mounted) {
       if (FirebaseAuth.instance.currentUser != null && context.mounted) {

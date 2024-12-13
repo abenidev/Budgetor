@@ -1,6 +1,10 @@
+import 'package:budgetor/helpers/firebase_auth_helper.dart';
 import 'package:budgetor/helpers/local_notification_helper.dart';
+import 'package:budgetor/helpers/shared_prefs_helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -11,6 +15,15 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
+  void initState() {
+    super.initState();
+    afterBuildCreated(() {
+      bool isFirebaseInited = SharedPrefsHelper.isFirebaseInited();
+      if (isFirebaseInited) FirebaseAuthHelper.initListener(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(
@@ -18,6 +31,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            CircleAvatar(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Image(
+                  image: NetworkImage(FirebaseAuth.instance.currentUser?.photoURL ?? ""),
+                ),
+              ),
+            ),
+            Text(FirebaseAuth.instance.currentUser?.displayName ?? ''),
+            ElevatedButton(
+              onPressed: () async {
+                FirebaseAuthHelper.signOut();
+              },
+              child: const Text('Signout', style: TextStyle(fontSize: 14)),
+            ),
             ElevatedButton(
               onPressed: () async {
                 bool isSuccess = await LocalNotificationHelper.showSimpleNotif(
