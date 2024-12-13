@@ -1,4 +1,5 @@
 import 'package:budgetor/helpers/firebase_helper.dart';
+import 'package:budgetor/helpers/workmanager_helper.dart';
 import 'package:budgetor/screens/home_screen.dart';
 import 'package:budgetor/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +13,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 import 'package:budgetor/constants/strings.dart';
 import 'package:budgetor/helpers/local_notification_helper.dart';
+import 'package:workmanager/workmanager.dart';
 
 Logger logger = Logger();
 
@@ -19,9 +21,16 @@ final isAppLoadingProvider = StateProvider<bool>((ref) {
   return false;
 });
 
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  WorkmanagerHelper.initExecuteTask();
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  //workmanager
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   //nb_utils shared pref initialization
   await initialize();
   //initialize firebase
@@ -49,8 +58,8 @@ class MyApp extends ConsumerWidget {
           title: appName,
           // ignore: deprecated_member_use
           useInheritedMediaQuery: true,
-          theme: FlexColorScheme.light(scheme: FlexScheme.orangeM3, useMaterial3: true, fontFamily: 'Poppins').toTheme,
-          darkTheme: FlexColorScheme.dark(scheme: FlexScheme.orangeM3, useMaterial3: true, fontFamily: 'Poppins').toTheme,
+          theme: FlexColorScheme.light(scheme: FlexScheme.deepOrangeM3, useMaterial3: true, fontFamily: 'Poppins').toTheme,
+          darkTheme: FlexColorScheme.dark(scheme: FlexScheme.deepOrangeM3, useMaterial3: true, fontFamily: 'Poppins').toTheme,
           themeMode: ThemeMode.system,
           home: const Root(),
         );

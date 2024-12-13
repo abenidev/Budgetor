@@ -94,8 +94,8 @@ class LocalNotificationHelper {
     required String body,
     String? payload,
   }) async {
-    bool isSuccess = await requestPermission();
-    if (!isSuccess) return false;
+    // bool isSuccess = await requestPermission();
+    // if (!isSuccess) return false;
 
     NotificationDetails notificationDetails = const NotificationDetails(
       android: _simpleAndroidNotifDetails,
