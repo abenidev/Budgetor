@@ -121,7 +121,7 @@ class _RootState extends ConsumerState<Root> with TickerProviderStateMixin {
     bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDarkMode ? const Color(0xff803D3B) : const Color(0xff803D3B),
+      backgroundColor: isDarkMode ? const Color(0xff131010) : const Color(0xffF29F58),
       body: Container(
         decoration: const BoxDecoration(),
         child: Center(
