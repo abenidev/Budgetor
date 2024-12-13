@@ -51,6 +51,8 @@ dependencies:
   google_sign_in: ^6.2.2
   sign_in_button: ^3.2.0
   workmanager: ^0.5.2
+  objectbox: ^4.0.3
+  objectbox_flutter_libs: ^4.0.3
 
 dev_dependencies:
   # flutter_native_splash: ^2.3.10
@@ -59,6 +61,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^4.0.0
+  objectbox_generator: ^4.0.3
 
 
 flutter:
