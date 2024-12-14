@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:budgetor/models/income.dart';
 import 'package:objectbox/objectbox.dart';
 
 import 'package:budgetor/models/budget.dart';
@@ -22,6 +23,9 @@ class UserModel {
 
   @Backlink()
   final savingsGoals = ToMany<SavingsGoal>();
+
+  @Backlink()
+  final incomes = ToMany<Income>();
 
   UserModel({
     this.id = 0,

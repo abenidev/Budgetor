@@ -53,6 +53,7 @@ dependencies:
   workmanager: ^0.5.2
   objectbox: ^4.0.3
   objectbox_flutter_libs: ^4.0.3
+  cloud_firestore: ^5.5.1
 
 dev_dependencies:
   # flutter_native_splash: ^2.3.10

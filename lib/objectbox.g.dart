@@ -16,6 +16,7 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'models/budget.dart';
 import 'models/category.dart';
+import 'models/income.dart';
 import 'models/savings_goal.dart';
 import 'models/transation.dart';
 import 'models/user_account.dart';
@@ -249,8 +250,46 @@ final _entities = <obx_int.ModelEntity>[
         obx_int.ModelBacklink(
             name: 'accounts', srcEntity: 'UserAccount', srcField: ''),
         obx_int.ModelBacklink(
-            name: 'savingsGoals', srcEntity: 'SavingsGoal', srcField: '')
-      ])
+            name: 'savingsGoals', srcEntity: 'SavingsGoal', srcField: ''),
+        obx_int.ModelBacklink(
+            name: 'incomes', srcEntity: 'Income', srcField: '')
+      ]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(7, 5753056031666294869),
+      name: 'Income',
+      lastPropertyId: const obx_int.IdUid(5, 4154360869331875501),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 3067674789377820779),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 2951802962725177237),
+            name: 'name',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 3816273736067776949),
+            name: 'amount',
+            type: 8,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 750212567314759549),
+            name: 'incomeRepitionType',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 4154360869331875501),
+            name: 'userModelId',
+            type: 11,
+            flags: 520,
+            indexId: const obx_int.IdUid(6, 6107867969220050927),
+            relationTarget: 'UserModel')
+      ],
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[])
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -288,8 +327,8 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(6, 6852840012148429731),
-      lastIndexId: const obx_int.IdUid(5, 7591601792923000898),
+      lastEntityId: const obx_int.IdUid(7, 5753056031666294869),
+      lastIndexId: const obx_int.IdUid(6, 6107867969220050927),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [],
@@ -536,7 +575,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
                   object.accounts,
               obx_int.RelInfo<SavingsGoal>.toOneBacklink(6, object.id,
                       (SavingsGoal srcObject) => srcObject.userModel):
-                  object.savingsGoals
+                  object.savingsGoals,
+              obx_int.RelInfo<Income>.toOneBacklink(
+                      5, object.id, (Income srcObject) => srcObject.userModel):
+                  object.incomes
             },
         getId: (UserModel object) => object.id,
         setId: (UserModel object, int id) {
@@ -585,6 +627,54 @@ obx_int.ModelDefinition getObjectBoxModel() {
               store,
               obx_int.RelInfo<SavingsGoal>.toOneBacklink(6, object.id,
                   (SavingsGoal srcObject) => srcObject.userModel));
+          obx_int.InternalToManyAccess.setRelInfo<UserModel>(
+              object.incomes,
+              store,
+              obx_int.RelInfo<Income>.toOneBacklink(
+                  5, object.id, (Income srcObject) => srcObject.userModel));
+          return object;
+        }),
+    Income: obx_int.EntityDefinition<Income>(
+        model: _entities[6],
+        toOneRelations: (Income object) => [object.userModel],
+        toManyRelations: (Income object) => {},
+        getId: (Income object) => object.id,
+        setId: (Income object, int id) {
+          object.id = id;
+        },
+        objectToFB: (Income object, fb.Builder fbb) {
+          final nameOffset = fbb.writeString(object.name);
+          final incomeRepitionTypeOffset =
+              fbb.writeString(object.incomeRepitionType);
+          fbb.startTable(6);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, nameOffset);
+          fbb.addFloat64(2, object.amount);
+          fbb.addOffset(3, incomeRepitionTypeOffset);
+          fbb.addInt64(4, object.userModel.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final nameParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final amountParam =
+              const fb.Float64Reader().vTableGet(buffer, rootOffset, 8, 0);
+          final incomeRepitionTypeParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 10, '');
+          final object = Income(
+              id: idParam,
+              name: nameParam,
+              amount: amountParam,
+              incomeRepitionType: incomeRepitionTypeParam);
+          object.userModel.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
+          object.userModel.attach(store);
           return object;
         })
   };
@@ -744,4 +834,31 @@ class UserModel_ {
   /// see [UserModel.savingsGoals]
   static final savingsGoals =
       obx.QueryBacklinkToMany<SavingsGoal, UserModel>(SavingsGoal_.userModel);
+
+  /// see [UserModel.incomes]
+  static final incomes =
+      obx.QueryBacklinkToMany<Income, UserModel>(Income_.userModel);
+}
+
+/// [Income] entity fields to define ObjectBox queries.
+class Income_ {
+  /// See [Income.id].
+  static final id =
+      obx.QueryIntegerProperty<Income>(_entities[6].properties[0]);
+
+  /// See [Income.name].
+  static final name =
+      obx.QueryStringProperty<Income>(_entities[6].properties[1]);
+
+  /// See [Income.amount].
+  static final amount =
+      obx.QueryDoubleProperty<Income>(_entities[6].properties[2]);
+
+  /// See [Income.incomeRepitionType].
+  static final incomeRepitionType =
+      obx.QueryStringProperty<Income>(_entities[6].properties[3]);
+
+  /// See [Income.userModel].
+  static final userModel =
+      obx.QueryRelationToOne<Income, UserModel>(_entities[6].properties[4]);
 }

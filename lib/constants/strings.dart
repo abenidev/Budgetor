@@ -8,3 +8,7 @@ const String websiteAddress = 'https://abeni.dev/';
 //
 const String incomeType = 'Income';
 const String expenseType = 'Expense';
+
+//
+const String usersCollName = 'users';
+const String incomesCollName = 'incomes';

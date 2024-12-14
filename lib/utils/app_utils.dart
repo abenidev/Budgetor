@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 String formatCurrency(double amount, {String locale = 'en_US', String currency = 'USD', String symbol = ''}) {
@@ -13,4 +14,8 @@ int generateRandomNumber(int min, int max) {
   }
   final random = Random();
   return min + random.nextInt(max - min + 1); // +1 to include 'max'
+}
+
+showCustomSnackBar(BuildContext context, String text) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
 }

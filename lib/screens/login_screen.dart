@@ -1,6 +1,5 @@
 import 'package:budgetor/helpers/firebase_auth_helper.dart';
-import 'package:budgetor/screens/home_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:budgetor/helpers/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,6 +18,18 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+  _handleLogin() async {
+    bool isSignInBtnLoading = ref.read(isSignInBtnLoadingProvider);
+
+    if (isSignInBtnLoading) return;
+    ref.read(isSignInBtnLoadingProvider.notifier).state = true;
+    DataFetchState userAuthState = await FirebaseAuthHelper.signInWithGoogle();
+    ref.read(isSignInBtnLoadingProvider.notifier).state = false;
+    if (mounted) {
+      FirebaseAuthHelper.authNavigationHandler(context, userAuthState);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isSignInBtnLoading = ref.watch(isSignInBtnLoadingProvider);
@@ -63,15 +74,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       mini: false,
                       elevation: isSignInBtnLoading ? 0.0 : 2.0,
                       padding: EdgeInsets.symmetric(vertical: 3.h),
-                      onPressed: () async {
-                        if (isSignInBtnLoading) return;
-                        ref.read(isSignInBtnLoadingProvider.notifier).state = true;
-                        bool isSignedIn = await FirebaseAuthHelper.signInWithGoogle();
-                        ref.read(isSignInBtnLoadingProvider.notifier).state = false;
-                        if (FirebaseAuth.instance.currentUser != null && isSignedIn && context.mounted) {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-                        }
-                      },
+                      onPressed: _handleLogin,
                     ),
                   ),
                   if (isSignInBtnLoading) ...[

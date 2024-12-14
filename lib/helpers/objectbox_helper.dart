@@ -1,5 +1,6 @@
 import 'package:budgetor/main.dart';
 import 'package:budgetor/models/budget.dart';
+import 'package:budgetor/models/income.dart';
 import 'package:budgetor/models/savings_goal.dart';
 import 'package:budgetor/models/transation.dart';
 import 'package:budgetor/models/user_account.dart';
@@ -30,6 +31,7 @@ class Boxes {
   Boxes._();
 
   static final userBox = objectbox.store.box<UserModel>();
+  static final incomesBox = objectbox.store.box<Income>();
   static final budgetBox = objectbox.store.box<Budget>();
   static final categoryBox = objectbox.store.box<Category>();
   static final savingsGoalBox = objectbox.store.box<SavingsGoal>();
