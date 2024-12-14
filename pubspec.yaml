@@ -54,6 +54,7 @@ dependencies:
   objectbox: ^4.0.3
   objectbox_flutter_libs: ^4.0.3
   cloud_firestore: ^5.5.1
+  drop_down_list: ^0.0.8
 
 dev_dependencies:
   # flutter_native_splash: ^2.3.10

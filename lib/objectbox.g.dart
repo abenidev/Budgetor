@@ -257,7 +257,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(7, 5753056031666294869),
       name: 'Income',
-      lastPropertyId: const obx_int.IdUid(5, 4154360869331875501),
+      lastPropertyId: const obx_int.IdUid(6, 5099887468103848622),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -286,7 +286,12 @@ final _entities = <obx_int.ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const obx_int.IdUid(6, 6107867969220050927),
-            relationTarget: 'UserModel')
+            relationTarget: 'UserModel'),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 5099887468103848622),
+            name: 'dateAdded',
+            type: 10,
+            flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
@@ -646,12 +651,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final nameOffset = fbb.writeString(object.name);
           final incomeRepitionTypeOffset =
               fbb.writeString(object.incomeRepitionType);
-          fbb.startTable(6);
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
           fbb.addFloat64(2, object.amount);
           fbb.addOffset(3, incomeRepitionTypeOffset);
           fbb.addInt64(4, object.userModel.targetId);
+          fbb.addInt64(5, object.dateAdded.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -667,11 +673,14 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final incomeRepitionTypeParam =
               const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 10, '');
+          final dateAddedParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0));
           final object = Income(
               id: idParam,
               name: nameParam,
               amount: amountParam,
-              incomeRepitionType: incomeRepitionTypeParam);
+              incomeRepitionType: incomeRepitionTypeParam,
+              dateAdded: dateAddedParam);
           object.userModel.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.userModel.attach(store);
@@ -861,4 +870,8 @@ class Income_ {
   /// See [Income.userModel].
   static final userModel =
       obx.QueryRelationToOne<Income, UserModel>(_entities[6].properties[4]);
+
+  /// See [Income.dateAdded].
+  static final dateAdded =
+      obx.QueryDateProperty<Income>(_entities[6].properties[5]);
 }

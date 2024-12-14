@@ -229,7 +229,7 @@
     },
     {
       "id": "7:5753056031666294869",
-      "lastPropertyId": "5:4154360869331875501",
+      "lastPropertyId": "6:5099887468103848622",
       "name": "Income",
       "properties": [
         {
@@ -260,6 +260,11 @@
           "flags": 520,
           "indexId": "6:6107867969220050927",
           "relationTarget": "UserModel"
+        },
+        {
+          "id": "6:5099887468103848622",
+          "name": "dateAdded",
+          "type": 10
         }
       ],
       "relations": []

@@ -1,8 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:budgetor/models/user_model.dart';
 import 'package:objectbox/objectbox.dart';
+
+import 'package:budgetor/models/user_model.dart';
 
 enum IncomeRepititionType {
   daily,
@@ -36,6 +37,7 @@ class Income {
   String name;
   double amount;
   String incomeRepitionType;
+  DateTime dateAdded;
 
   final userModel = ToOne<UserModel>();
 
@@ -44,6 +46,7 @@ class Income {
     required this.name,
     required this.amount,
     required this.incomeRepitionType,
+    required this.dateAdded,
   });
 
   Income copyWith({
@@ -51,12 +54,14 @@ class Income {
     String? name,
     double? amount,
     String? incomeRepitionType,
+    DateTime? dateAdded,
   }) {
     return Income(
       id: id ?? this.id,
       name: name ?? this.name,
       amount: amount ?? this.amount,
       incomeRepitionType: incomeRepitionType ?? this.incomeRepitionType,
+      dateAdded: dateAdded ?? this.dateAdded,
     );
   }
 
@@ -66,6 +71,7 @@ class Income {
       'name': name,
       'amount': amount,
       'incomeRepitionType': incomeRepitionType,
+      'dateAdded': dateAdded.millisecondsSinceEpoch,
     };
   }
 
@@ -75,6 +81,7 @@ class Income {
       name: map['name'] as String,
       amount: map['amount'] as double,
       incomeRepitionType: map['incomeRepitionType'] as String,
+      dateAdded: DateTime.fromMillisecondsSinceEpoch(map['dateAdded'] as int),
     );
   }
 
@@ -84,18 +91,18 @@ class Income {
 
   @override
   String toString() {
-    return 'Income(id: $id, name: $name, amount: $amount, incomeRepitionType: $incomeRepitionType)';
+    return 'Income(id: $id, name: $name, amount: $amount, incomeRepitionType: $incomeRepitionType, dateAdded: $dateAdded)';
   }
 
   @override
   bool operator ==(covariant Income other) {
     if (identical(this, other)) return true;
 
-    return other.id == id && other.name == name && other.amount == amount && other.incomeRepitionType == incomeRepitionType;
+    return other.id == id && other.name == name && other.amount == amount && other.incomeRepitionType == incomeRepitionType && other.dateAdded == dateAdded;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ name.hashCode ^ amount.hashCode ^ incomeRepitionType.hashCode;
+    return id.hashCode ^ name.hashCode ^ amount.hashCode ^ incomeRepitionType.hashCode ^ dateAdded.hashCode;
   }
 }

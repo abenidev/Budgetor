@@ -1,4 +1,6 @@
 import 'package:budgetor/constants/strings.dart';
+import 'package:budgetor/helpers/objectbox_helper.dart';
+import 'package:budgetor/helpers/query_helper.dart';
 import 'package:budgetor/main.dart';
 import 'package:budgetor/models/income.dart';
 import 'package:budgetor/models/user_model.dart';
@@ -13,6 +15,19 @@ class FirestoreHelper {
   static final db = FirebaseFirestore.instance;
   static final _auth = FirebaseAuth.instance;
 
+  static Future<bool> addNewIncome(Income newIncome) async {
+    try {
+      String? userId = _auth.currentUser?.uid;
+      if (userId == null) throw Exception('userId cannot be null in addNewIncome function');
+      CollectionReference collRef = db.collection(usersCollName).doc(userId).collection(incomesCollName);
+      await collRef.add(newIncome.toMap());
+      return true;
+    } catch (e) {
+      logger.e(e);
+      return false;
+    }
+  }
+
   static Future<bool> addNewUser(UserModel userModel) async {
     try {
       String? userId = _auth.currentUser?.uid;
@@ -22,6 +37,7 @@ class FirestoreHelper {
       logger.i('DocumentSnapshot added with ID: ${docRef.id}');
       return true;
     } catch (e) {
+      logger.e(e);
       return false;
     }
   }
@@ -45,18 +61,30 @@ class FirestoreHelper {
   static Future<DataFetchState> getUserIncomesData() async {
     try {
       String? userId = _auth.currentUser?.uid;
-      if (userId == null) throw Exception('userId cannot be null inside getUserIncomesData function');
+      if (userId == null) {
+        // return DataFetchState.hasNoData;
+        throw Exception('userId cannot be null inside getUserIncomesData function');
+      }
       DocumentReference docRef = db.collection(usersCollName).doc(userId);
       QuerySnapshot querySnapshot = await docRef.collection(incomesCollName).get();
-      List<Income> incomesData = querySnapshot.docs
-          .map(
-            (doc) => Income.fromMap(doc.data() as Map<String, dynamic>),
-          )
-          .toList();
+      List<Income> incomesData = querySnapshot.docs.map((doc) => Income.fromMap(doc.data() as Map<String, dynamic>)).toList();
       logger.i('incomesData: ${incomesData}');
       if (incomesData.isEmpty) return DataFetchState.hasNoData;
-      // Boxes.incomesBox.putMany(incomesData);
-      logger.i('returning hasData....');
+
+      //add income data to objectbox
+      for (Income income in incomesData) {
+        Income? incomeFound = QueryHelper.getUserIncomeByName(income.name);
+        if (incomeFound == null) {
+          Income newIncome = Income(
+            name: income.name,
+            amount: income.amount,
+            incomeRepitionType: income.incomeRepitionType,
+            dateAdded: income.dateAdded,
+          );
+          Boxes.incomesBox.put(newIncome);
+        }
+      }
+
       return DataFetchState.hasData;
     } catch (e) {
       return DataFetchState.failed;

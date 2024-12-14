@@ -2,7 +2,6 @@ import 'package:budgetor/helpers/firebase_auth_helper.dart';
 import 'package:budgetor/helpers/shared_prefs_helper.dart';
 import 'package:budgetor/helpers/workmanager_helper.dart';
 import 'package:budgetor/screens/setting_screen.dart';
-import 'package:budgetor/utils/date_utils.dart';
 import 'package:budgetor/widgets/income_widget.dart';
 import 'package:budgetor/widgets/monthly_budget_widget.dart';
 import 'package:budgetor/widgets/spending_widget.dart';
@@ -58,7 +57,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 Text(
-                  'Monthly Budget ${daysLeftInMonth()}',
+                  'Monthly Budget',
                   style: TextStyle(fontSize: 14.sp),
                 ),
               ],
@@ -86,9 +85,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   [
                     SizedBox(height: 15.h),
                     const MonthlyBudgetWidget(),
-                    SizedBox(height: 25.h),
-                    // const Divider(),
-                    SizedBox(height: 5.h),
+                    SizedBox(height: 20.h),
                     const IncomeWidget(),
                     SizedBox(height: 25.h),
                     const SpendingWidget(),

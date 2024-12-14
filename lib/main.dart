@@ -3,6 +3,8 @@ import 'package:budgetor/helpers/firebase_helper.dart';
 import 'package:budgetor/helpers/firestore_helper.dart';
 import 'package:budgetor/helpers/objectbox_helper.dart';
 import 'package:budgetor/helpers/workmanager_helper.dart';
+import 'package:budgetor/screens/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -106,7 +108,14 @@ class _RootState extends ConsumerState<Root> with TickerProviderStateMixin {
     await LocalNotificationHelper.requestPermission();
     await LocalNotificationHelper.initializeNotif();
 
+    User? loggedInUser = FirebaseAuth.instance.currentUser;
+    if (loggedInUser == null && mounted) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+      return;
+    }
+
     DataFetchState dataFetchState = await FirestoreHelper.getUserIncomesData();
+
     if (mounted) {
       FirebaseAuthHelper.authNavigationHandler(context, dataFetchState);
     }
